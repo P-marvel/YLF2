@@ -1,4 +1,4 @@
-* {
+    * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -9,9 +9,15 @@
       scroll-behavior: smooth;
       background: linear-gradient(135deg, #f6bc00 0%, #003700 100%);
       min-height: 100vh;
+      padding-top: 50px;
     }
 
     .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1002;
       background: linear-gradient(90deg, #003700 60%, #f6bc00 100%);
       box-shadow: 0 4px 20px rgba(0,0,0,0.2);
       animation: navFadeIn 1s ease;
@@ -48,6 +54,7 @@
 
     .nav-links li a {
       color: #fff;
+      text-decoration: none;
       background: linear-gradient(90deg, #f6bc00 0%, #003700 100%);
       border-radius: 20px;
       padding: 8px 18px;
@@ -116,6 +123,9 @@
       }
       .nav-links.active {
         display: flex;
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
       }
       .nav-links li {
         text-align: center;
@@ -139,11 +149,14 @@
     }
 
     .hero {
-      background: linear-gradient(120deg, #003700 60%, #f6bc00 100%);
-      color: #fff;
+      background-image: linear-gradient(rgba(0, 32, 0, 0.6), rgba(0, 32, 0, 0.6)), url(Images/bckgnd.jpg);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      color: white;
       text-align: center;
       padding: 80px 20px 60px 20px;
-      position: relative;
       overflow: hidden;
       animation: heroFadeIn 1.2s ease;
     }
@@ -161,6 +174,14 @@
       font-size: 1.3em;
       margin-bottom: 30px;
       color: #ffe082;
+    }
+
+    /* Optional: Responsive adjustment for mobile */
+    @media (max-width: 600px) {
+      .hero {
+        padding: 50px 10px 40px 10px;
+        background-position: center top;
+      }
     }
 
     .countdown {
@@ -256,6 +277,31 @@
       font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
+
+    .video-container {
+  position:relative;
+  padding-bottom: 56.25%; /* 16:9 ratio */
+  padding-top: px;
+  height: 0;
+  background-color: #003700;
+  margin-bottom: 20px;
+}
+
+.video-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  justify-self: center;
+  width: 100%; 
+  max-width: 800px; 
+  margin: 1rem auto; 
+  display: block;
+  border-radius: 10px;
+}
+
+
     .contact-info {
       margin-top: 20px;
     }
@@ -277,7 +323,6 @@
     }
     .social-media a:hover {
       color: #fff;
-      background: #f6bc00;
       transform: scale(1.15) rotate(-8deg);
     }
 
@@ -393,8 +438,11 @@
     }
 
     .hero {
-      background-image: url(Images/bckgnd.jpg) ;
+      background-image: linear-gradient(rgba(0, 32, 0, 0.6), rgba(0, 32, 0, 0.6)), url(Images/bckgnd.jpg) ;
 
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       color: white;
       text-align: center;
       padding: 60px 20px;
@@ -510,7 +558,7 @@
     width: auto;
     padding: 16px;
     margin-top: -22px;
-    color: white;
+    color: rgb(0, 0, 0);
     font-weight: bold;
     font-size: 18px;
     transition: 0.6s ease;
@@ -528,7 +576,7 @@
 }
 
 .prev:hover, .next:hover {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: #003700;
 }
     .dot {
     cursor: pointer;
@@ -595,6 +643,12 @@
         height: 350px; 
         object-fit: cover;
     }
+    #simon{
+        color: #003700;
+        text-decoration: none;
+        font-weight: 600;
+        margin-top: 1rem;
+    }
 
 
     .form-group {
@@ -641,3 +695,31 @@
     .submit:hover {
       background: #d89f00;
     }
+
+
+    /* Hamburger animation */
+.hamburger.active div:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+.hamburger.active div:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active div:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Mobile menu animation */
+@media (max-width: 768px) {
+  .nav-links {
+    opacity: 0;
+    transform: translateY(-30px);
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(.4,0,.2,1), transform 0.4s cubic-bezier(.4,0,.2,1);
+  }
+  .nav-links.active {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}

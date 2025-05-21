@@ -1,6 +1,4 @@
-
-
-    // Countdown Timer
+// Countdown Timer
     const eventDate = new Date("2025-09-27T10:00:00").getTime();
     const countdown = () => {
       const now = new Date().getTime();
@@ -24,12 +22,14 @@
     const navLinks = document.getElementById("nav-links");
     hamburger.addEventListener("click", () => {
       navLinks.classList.toggle("active");
+      hamburger.classList.toggle("active"); // Add this for animation
     });
     // Close mobile menu on link click
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
         if (window.innerWidth <= 768) {
           navLinks.classList.remove('active');
+          hamburger.classList.remove('active'); // Remove animation on close
         }
       });
     });
@@ -42,6 +42,7 @@ window.addEventListener('click', function(e) {
   if (window.innerWidth <= 768 && navLinks.classList.contains('active')) {
     if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
       navLinks.classList.remove('active');
+      hamburger.classList.remove('active'); // Remove animation on outside click
     }
   }
 });
@@ -72,34 +73,71 @@ window.addEventListener('click', function(e) {
 
 
   let slideIndex = 1;
-    showSlides(slideIndex);
+let slideInterval;
+showSlides(slideIndex);
 
-    function plusSlides(n) {
-        showSlides(slideIndex += n);
+function plusSlides(n) {
+    showSlides(slideIndex += n);
+    resetSlideInterval();
+}
+
+function currentSlide(n) {
+    showSlides(slideIndex = n);
+    resetSlideInterval();
+}
+
+function showSlides(n) {
+    let i;
+    let slides = document.getElementsByClassName("mySlides");
+    let dots = document.getElementsByClassName("dot");
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";  
     }
-
-    function currentSlide(n) {
-        showSlides(slideIndex = n);
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
     }
+    slides[slideIndex-1].style.display = "block";  
+    dots[slideIndex-1].className += " active";
+}
 
-    function showSlides(n) {
-        let i;
-        let slides = document.getElementsByClassName("mySlides");
-        let dots = document.getElementsByClassName("dot");
-        if (n > slides.length) {slideIndex = 1}
-        if (n < 1) {slideIndex = slides.length}
-        for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";  
-        }
-        for (i = 0; i < dots.length; i++) {
-            dots[i].className = dots[i].className.replace(" active", "");
-        }
-        slides[slideIndex-1].style.display = "block";  
-        dots[slideIndex-1].className += " active";
+function autoSlideShow() {
+  plusSlides(1);
+}
+
+function resetSlideInterval() {
+  clearInterval(slideInterval);
+  slideInterval = setInterval(autoSlideShow, 4000); // 4 seconds
+}
+
+// Start automatic slideshow
+slideInterval = setInterval(autoSlideShow, 4000);
+
+// Touch/swipe support for gallery
+const slideshowContainer = document.querySelector('.slideshow-container');
+let startX = 0;
+let endX = 0;
+if (slideshowContainer) {
+  slideshowContainer.addEventListener('touchstart', function(e) {
+    startX = e.touches[0].clientX;
+  });
+  slideshowContainer.addEventListener('touchmove', function(e) {
+    endX = e.touches[0].clientX;
+  });
+  slideshowContainer.addEventListener('touchend', function() {
+    if (startX && endX) {
+      if (startX - endX > 50) {
+        plusSlides(1); // swipe left, next
+      } else if (endX - startX > 50) {
+        plusSlides(-1); // swipe right, prev
+      }
     }
-
-
-
+    startX = 0;
+    endX = 0;
+  });
+}
+// ...existing code...
     document.addEventListener('DOMContentLoaded', function () {
     const links = document.querySelectorAll('a[href^="#"]');
 
@@ -188,7 +226,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-    // Contact form success alert and redirect
+   
+
+// Animate hero text on load
+window.addEventListener('DOMContentLoaded', function() {
+  const hero = document.querySelector('.hero');
+  if (hero) {
+    hero.style.opacity = 0;
+    hero.style.transform = 'scale(0.98)';
+    setTimeout(() => {
+      hero.style.transition = 'opacity 1.2s, transform 1.2s';
+      hero.style.opacity = 1;
+      hero.style.transform = 'scale(1)';
+    }, 200);
+  }
+});
+
+
+
+  // Contact form success alert and redirect
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
   contactForm.addEventListener('submit', function(e) {
@@ -213,16 +269,90 @@ if (contactForm) {
   });
 }
 
-// Animate hero text on load
-window.addEventListener('DOMContentLoaded', function() {
-  const hero = document.querySelector('.hero');
-  if (hero) {
-    hero.style.opacity = 0;
-    hero.style.transform = 'scale(0.98)';
-    setTimeout(() => {
-      hero.style.transition = 'opacity 1.2s, transform 1.2s';
-      hero.style.opacity = 1;
-      hero.style.transform = 'scale(1)';
-    }, 200);
-  }
-});
+
+//response for Google sheet 
+
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbz3mHttSfLjWk-dbuQ1Ia0Ts5Xw31qHddxX9JeB-DJLx8LACqKAC5NZ2WoGRq9pXc9qwA/exec';
+  const form = document.getElementById('contactForm');
+  const responseMessage = document.getElementById('responseMessage');
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const obj = {
+      name: data.get("name"),
+      email: data.get("email"),
+      message: data.get("message")
+    };
+
+    fetch(scriptURL, {
+      method: 'POST',
+      body: JSON.stringify(obj),
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => {
+      responseMessage.textContent = "Message sent successfully!";
+      form.reset();
+    })
+    .catch(err => {
+      console.error('Error!', err.message);
+      responseMessage.textContent = "Something went wrong.";
+    });
+  });
+
+
+ 
+
+
+/*
+
+const form = document.getElementById('contactForm');
+const responseMessage = document.getElementById('responseMessage');
+
+const formspreeURL = 'https://formspree.io/f/xanwezjl';
+const googleScriptURL = 'https://script.google.com/macros/s/AKfycbz3mHttSfLjWk-dbuQ1Ia0Ts5Xw31qHddxX9JeB-DJLx8LACqKAC5NZ2WoGRq9pXc9qwA/exec';
+
+if (form) {
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const jsonData = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      message: formData.get("message")
+    };
+
+    // Send to Formspree
+    const sendToFormspree = fetch(formspreeURL, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    // Send to Google Sheets
+    const sendToGoogleSheet = fetch(googleScriptURL, {
+      method: 'POST',
+      body: JSON.stringify(jsonData),
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    // Wait for both requests
+    Promise.all([sendToFormspree, sendToGoogleSheet])
+      .then(([formspreeRes, sheetRes]) => {
+        if (formspreeRes.ok && sheetRes.ok) {
+          responseMessage.textContent = "Message sent successfully!";
+          form.reset();
+          window.location.href = '#hero'; // Optional: navigate to hero section
+        } else {
+          responseMessage.textContent = "Error sending message. Please try again.";
+        }
+      })
+      .catch(error => {
+        console.error("Submission error:", error);
+        responseMessage.textContent = "Something went wrong. Please try again.";
+      });
+  });
+}
+
+*/
